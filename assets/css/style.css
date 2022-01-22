@@ -6,18 +6,19 @@
 section {
   width: 100%;
 }
-* {
+h1 {
   text-align: center;
   /* margin: 10px;
   margin-top: 3px; */
 }
 input {
-  margin-right: 10px;
-  margin-left: 10px;
-  width: 40%;
   margin-top: 5px;
 
   margin-bottom: 5px;
+}
+
+button {
+  margin-top: 10px;
 }
 
 .past {
@@ -30,4 +31,19 @@ input {
 
 .future {
   background-color: darkseagreen;
+}
+
+#citydiv {
+  border-style: solid;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  padding-left: 15px;
+  padding-top: 10px;
+}
+#forecast {
+  margin-left: 12px;
+  /* margin-right: 10px;
+  margin-bottom: 5px;
+  padding: 10px; */
 }

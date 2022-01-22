@@ -15,24 +15,76 @@
     <header class="p-3 bg-dark text-white">
       <h1>Weather Dashboard</h1>
     </header>
-    <div class="container">
+    <div>
+      <!-- class="container">-->
       <div class="row mb-6">
         <div class="col-md-3 themed-grid-col">
-          <div class="col-md-12 themed-grid-col">.col-md-8</div>
-          <div class="col-md-12 themed-grid-col">.col-md-8</div>
+          <div class="col-md-12 themed-grid-col">
+            <h2>Search for a City:</h2>
+            <input
+              class="form-control form-control-lg"
+              type="text"
+              placeholder=".form-control-lg"
+              value="San Diego"
+            />
+
+            <button type="button" class="btn btn-info">Search</button>
+            <hr />
+          </div>
+          <div class="col-md-12 themed-grid-col">
+            <h5>Past Searches Here</h5>
+          </div>
           <!-- <div class="row">
             <div class="col-md-6 themed-grid-col">.col-md-6</div>
             <div class="col-md-6 themed-grid-col">.col-md-6</div>
           </div> -->
         </div>
         <div class="col-md-9 themed-grid-col">
-          <div class="col-md-12 themed-grid-col">CITY</div>
+          <div id="citydiv">
+            <h3>Atlanta</h3>
+            <p>Temp</p>
+            <p>Wind</p>
+            <p>Humidity</p>
+            <p>UV Index</p>
+          </div>
+
+          <div class="col-md-12 themed-grid-col">
+            <h4>5-Day Forecast</h4>
+          </div>
           <div class="col-md-12 themed-grid-col row">
-            <div class="col">.col-md-8</div>
-            <div class="col">.col-md-8</div>
-            <div class="col">.col-md-8</div>
-            <div class="col">.col-md-8</div>
-            <div class="col">.col-md-8</div>
+            <div class="col">
+              <h5>Tomorrow</h5>
+              <img></img>
+              <p>Temp</p>
+              <p>Wind</p>
+              <p>Humidity</p>
+            </div>
+            <div class="col">
+              <h5>Tomorrow</h5>
+              <img></img>
+              <p>Temp</p>
+              <p>Wind</p>
+              <p>Humidity</p>
+            </div>
+            <div class="col">
+              <h5>Tomorrow</h5>
+              <img></img>
+              <p>Temp</p>
+              <p>Wind</p>
+              <p>Humidity</p></div>
+            <div class="col">
+              <h5>Tomorrow</h5>
+              <img></img>
+              <p>Temp</p>
+              <p>Wind</p>
+              <p>Humidity</p></div>
+            <div class="col">
+              <h5>Tomorrow</h5>
+              <img></img>
+              <p>Temp</p>
+              <p>Wind</p>
+              <p>Humidity</p>
+            </div>
           </div>
         </div>
       </div>
