@@ -1,0 +1,33 @@
+/* .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+} */
+section {
+  width: 100%;
+}
+* {
+  text-align: center;
+  /* margin: 10px;
+  margin-top: 3px; */
+}
+input {
+  margin-right: 10px;
+  margin-left: 10px;
+  width: 40%;
+  margin-top: 5px;
+
+  margin-bottom: 5px;
+}
+
+.past {
+  background-color: darkgray;
+}
+
+.now {
+  background-color: lightskyblue;
+}
+
+.future {
+  background-color: darkseagreen;
+}
