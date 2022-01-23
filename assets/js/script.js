@@ -13,7 +13,8 @@ var body = document.getElementsByTagName("body")[0];
 var searchCity = document.getElementById("searchCity");
 var cityName = document.getElementById("cityName");
 var city = "Perth";
-
+var PastSearchesDiv = document.getElementById("pastSearches");
+var AddSearchHistory = false;
 getCurrentWeather(city);
 function getCurrentWeather(city) {
   // get current weather
@@ -39,6 +40,9 @@ function getCurrentWeather(city) {
       latitude = data.coord.lat;
       longitude = data.coord.lon;
       getUVIndex(latitude, longitude);
+      if (AddSearchHistory) {
+        addToPastSearches();
+      }
     })
     .catch(function (error) {
       searchCity.value = "Couldn't find " + searchCity.value + ", try again";
@@ -110,8 +114,27 @@ function getWeatherForecast(city) {
 body.addEventListener("click", Search);
 
 function Search(event) {
+  const isButton = event.target.nodeName === "BUTTON";
   if (event.target.innerText === "Search") {
     city = searchCity.value;
+    AddSearchHistory = true;
     getCurrentWeather(city);
+  } else if (isButton) {
+    AddSearchHistory = false;
+    getCurrentWeather(event.target.innerText);
+  }
+}
+
+function addToPastSearches() {
+  var SearchHistoryButton = document.createElement("button");
+  SearchHistoryButton.innerText = city;
+  SearchHistoryButton.setAttribute("class", "btn btn-secondary col-md-12");
+  if (PastSearchesDiv.hasChildNodes) {
+    PastSearchesDiv.insertBefore(
+      SearchHistoryButton,
+      PastSearchesDiv.children[0]
+    );
+  } else {
+    PastSearchesDiv.appendChild(SearchHistoryButton);
   }
 }
