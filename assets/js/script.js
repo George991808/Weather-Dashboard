@@ -12,7 +12,12 @@ var forecast;
 var body = document.getElementsByTagName("body")[0];
 var searchCity = document.getElementById("searchCity");
 var cityName = document.getElementById("cityName");
-var city = "Perth";
+var city = JSON.parse(localStorage.getItem("city"));
+if (city == undefined) {
+  city = "Perth";
+}
+searchCity.value = city;
+cityName.innerText = city;
 var PastSearchesDiv = document.getElementById("pastSearches");
 var AddSearchHistory = false;
 getCurrentWeather(city);
@@ -21,7 +26,7 @@ function getCurrentWeather(city) {
   var requestUrl =
     "https://api.openweathermap.org/data/2.5/weather?q=" +
     city +
-    "&appid=6b8908d00c6960527601cc8bcce1648d";
+    "&units=imperial&appid=6b8908d00c6960527601cc8bcce1648d";
 
   fetch(requestUrl)
     .then(function (response) {
@@ -43,6 +48,7 @@ function getCurrentWeather(city) {
       if (AddSearchHistory) {
         addToPastSearches();
       }
+      localStorage.setItem("city", JSON.stringify(city));
     })
     .catch(function (error) {
       searchCity.value = "Couldn't find " + searchCity.value + ", try again";
@@ -55,7 +61,7 @@ function getUVIndex(lat, lon) {
     lat +
     "&lon=" +
     lon +
-    "&exclude={part}&appid=6b8908d00c6960527601cc8bcce1648d";
+    "&units=imperial&exclude={part}&appid=6b8908d00c6960527601cc8bcce1648d";
 
   fetch(requestUrl)
     .then(function (response) {
