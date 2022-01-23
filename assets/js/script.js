@@ -1,13 +1,22 @@
-getCurrentWeather();
+var now = moment();
+var date;
 var currentTemperature = document.getElementById("currentTemperature");
 var currentWind = document.getElementById("currentWind");
 var currentHumidity = document.getElementById("currentHumidity");
 var UVIndex = document.getElementById("UVIndex");
+var UVcolor = "green";
+var forecastdiv = document.getElementById("forecasts");
 
-function getCurrentWeather() {
+var cityName = document.getElementById("cityName");
+var city = "Perth";
+cityName.innerText = city + " " + moment().format("MM/DD/YYYY");
+getCurrentWeather(city);
+function getCurrentWeather(city) {
   // get current weather
   var requestUrl =
-    "https://api.openweathermap.org/data/2.5/weather?q=Perth&appid=6b8908d00c6960527601cc8bcce1648d";
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    city +
+    "&appid=6b8908d00c6960527601cc8bcce1648d";
 
   fetch(requestUrl)
     .then(function (response) {
@@ -22,7 +31,7 @@ function getCurrentWeather() {
     });
 }
 function getUVIndex(lat, lon) {
-  // get current weather
+  // get current UV index
   var requestUrl =
     "https://api.openweathermap.org/data/2.5/onecall?lat=" +
     lat +
@@ -36,6 +45,22 @@ function getUVIndex(lat, lon) {
     })
     .then(function (data) {
       console.log(data);
-      UVIndex.innerText = "UV Index " + data.current.uvi;
+      UVIndex.innerText = data.current.uvi;
+      if (data.current.uvi > 6) {
+        UVcolor = "red";
+      } else if (data.current.uvi > 3) {
+        UVcolor = "orange";
+      } else {
+        UVcolor = "green";
+      }
+      UVIndex.setAttribute("style", "background-color:" + UVcolor + ";");
     });
+}
+
+fillforecasts();
+function fillforecasts() {
+  for (let i = 0; i < 5; i++) {
+    date = moment().add(i + 1, "days");
+    forecastdiv.children[i].children[0].innerText = date.format("MM/DD/YYYY");
+  }
 }
