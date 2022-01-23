@@ -6,6 +6,9 @@ var currentHumidity = document.getElementById("currentHumidity");
 var UVIndex = document.getElementById("UVIndex");
 var UVcolor = "green";
 var forecastdiv = document.getElementById("forecasts");
+var latitude;
+var longitude;
+var forecast;
 
 var cityName = document.getElementById("cityName");
 var city = "Perth";
@@ -24,10 +27,12 @@ function getCurrentWeather(city) {
     })
     .then(function (data) {
       console.log(data);
-      currentTemperature.innerText = "Temp " + data.main.temp + "9\xB0" + "F";
-      currentWind.innerText = "Wind " + data.wind.speed + " MPH";
-      currentHumidity.innerText = "Humidity " + data.main.humidity + "%";
-      getUVIndex(data.coord.lat, data.coord.lon);
+      currentTemperature.innerText = "Temp: " + data.main.temp + "9\xB0" + "F";
+      currentWind.innerText = "Wind: " + data.wind.speed + " MPH";
+      currentHumidity.innerText = "Humidity: " + data.main.humidity + "%";
+      latitude = data.coord.lat;
+      longitude = data.coord.lon;
+      getUVIndex(latitude, longitude);
     });
 }
 function getUVIndex(lat, lon) {
@@ -54,13 +59,41 @@ function getUVIndex(lat, lon) {
         UVcolor = "green";
       }
       UVIndex.setAttribute("style", "background-color:" + UVcolor + ";");
+      forecast = data;
+      fillforecasts();
     });
 }
 
-fillforecasts();
+// fillforecasts();
 function fillforecasts() {
   for (let i = 0; i < 5; i++) {
     date = moment().add(i + 1, "days");
     forecastdiv.children[i].children[0].innerText = date.format("MM/DD/YYYY");
+    forecastdiv.children[i].children[2].innerText =
+      "Temp: " + forecast.daily[i].temp.day + "9\xB0" + "F";
+    forecastdiv.children[i].children[3].innerText =
+      "Wind: " + forecast.daily[i].wind_speed + " MPH";
+    forecastdiv.children[i].children[4].innerText =
+      "Humidity: " + forecast.daily[i].humidity + "%";
   }
+}
+
+function getWeatherForecast(city) {
+  // get current weather
+  var requestUrl =
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    city +
+    "&appid=6b8908d00c6960527601cc8bcce1648d";
+
+  fetch(requestUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      currentTemperature.innerText = "Temp: " + data.main.temp + "9\xB0" + "F";
+      currentWind.innerText = "Wind: " + data.wind.speed + " MPH";
+      currentHumidity.innerText = "Humidity: " + data.main.humidity + "%";
+      getUVIndex(data.coord.lat, data.coord.lon);
+    });
 }
