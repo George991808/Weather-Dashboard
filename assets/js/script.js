@@ -9,10 +9,11 @@ var forecastdiv = document.getElementById("forecasts");
 var latitude;
 var longitude;
 var forecast;
-
+var body = document.getElementsByTagName("body")[0];
+var searchCity = document.getElementById("searchCity");
 var cityName = document.getElementById("cityName");
 var city = "Perth";
-cityName.innerText = city + " " + moment().format("MM/DD/YYYY");
+
 getCurrentWeather(city);
 function getCurrentWeather(city) {
   // get current weather
@@ -23,9 +24,14 @@ function getCurrentWeather(city) {
 
   fetch(requestUrl)
     .then(function (response) {
-      return response.json();
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error();
+      }
     })
     .then(function (data) {
+      cityName.innerText = city + " " + moment().format("MM/DD/YYYY");
       console.log(data);
       currentTemperature.innerText = "Temp: " + data.main.temp + "9\xB0" + "F";
       currentWind.innerText = "Wind: " + data.wind.speed + " MPH";
@@ -33,6 +39,9 @@ function getCurrentWeather(city) {
       latitude = data.coord.lat;
       longitude = data.coord.lon;
       getUVIndex(latitude, longitude);
+    })
+    .catch(function (error) {
+      searchCity.value = "Couldn't find " + searchCity.value + ", try again";
     });
 }
 function getUVIndex(lat, lon) {
@@ -96,4 +105,13 @@ function getWeatherForecast(city) {
       currentHumidity.innerText = "Humidity: " + data.main.humidity + "%";
       getUVIndex(data.coord.lat, data.coord.lon);
     });
+}
+
+body.addEventListener("click", Search);
+
+function Search(event) {
+  if (event.target.innerText === "Search") {
+    city = searchCity.value;
+    getCurrentWeather(city);
+  }
 }
