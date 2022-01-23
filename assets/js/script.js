@@ -1,19 +1,25 @@
 var now = moment();
 var date;
+
+/// next elements are all from the today weather section in top right
 var currentTemperature = document.getElementById("currentTemperature");
 var weatherIcon = document.getElementById("weatherIcon");
 var currentWind = document.getElementById("currentWind");
 var currentHumidity = document.getElementById("currentHumidity");
 var UVIndex = document.getElementById("UVIndex");
 var UVcolor = "green";
-var forecastdiv = document.getElementById("forecasts");
+
+var forecastdiv = document.getElementById("forecasts"); //Section with the 5 future days
 var latitude;
 var longitude;
-var forecast;
+var forecastData; //all the forecast weather data from the open weather api
+
+// body used to get an event listener for all the click events
 var body = document.getElementsByTagName("body")[0];
-var searchCity = document.getElementById("searchCity");
+var searchCity = document.getElementById("searchCity"); //the Input form
 var PastSearchesDiv = document.getElementById("pastSearches");
 var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+//Get  the search history from local storage
 if (searchHistory == undefined) {
   searchHistory = [];
 } else {
@@ -22,7 +28,7 @@ if (searchHistory == undefined) {
     addToPastSearches();
   }
 }
-
+//Get  the last searched city from local storage otehrwise start from Perth
 var cityName = document.getElementById("cityName");
 var city = JSON.parse(localStorage.getItem("city"));
 
@@ -32,8 +38,10 @@ if (city == undefined) {
 searchCity.value = city;
 cityName.innerText = city;
 
-var AddSearchHistory = false;
-getCurrentWeather(city);
+var AddSearchHistory = false; //if false, a  history button was pressed so don't add city to history, if true, search button was pressed so add to history
+
+getCurrentWeather(city); //load last cities weather on refreshing page
+
 function getCurrentWeather(city) {
   // get current weather
   var requestUrl =
@@ -46,7 +54,7 @@ function getCurrentWeather(city) {
       if (response.ok) {
         return response.json();
       } else {
-        throw new Error();
+        throw new Error(); //catch cities that don't exist in API
       }
     })
     .then(function (data) {
@@ -71,8 +79,8 @@ function getCurrentWeather(city) {
       console.log(error);
     });
 }
+//This gets data from another API, which is used for UV data and forecast weather data
 function getUVIndex(lat, lon) {
-  // get current UV index
   var requestUrl =
     "https://api.openweathermap.org/data/2.5/onecall?lat=" +
     lat +
@@ -101,12 +109,12 @@ function getUVIndex(lat, lon) {
           data.current.weather[0].icon +
           ".png"
       );
-      forecast = data;
+      forecastData = data;
       fillforecasts();
     });
 }
 
-// fillforecasts();
+//sort the data from the api call and put it on the page in forecast section
 function fillforecasts() {
   for (let i = 0; i < 5; i++) {
     date = moment().add(i + 1, "days");
@@ -114,41 +122,22 @@ function fillforecasts() {
     forecastdiv.children[i].children[1].setAttribute(
       "src",
       "http://openweathermap.org/img/w/" +
-        forecast.daily[i].weather[0].icon +
+        forecastData.daily[i].weather[0].icon +
         ".png"
     );
 
     forecastdiv.children[i].children[2].innerText =
-      "Temp: " + forecast.daily[i].temp.day + "9\xB0" + "F";
+      "Temp: " + forecastData.daily[i].temp.day + "9\xB0" + "F";
     forecastdiv.children[i].children[3].innerText =
-      "Wind: " + forecast.daily[i].wind_speed + " MPH";
+      "Wind: " + forecastData.daily[i].wind_speed + " MPH";
     forecastdiv.children[i].children[4].innerText =
-      "Humidity: " + forecast.daily[i].humidity + "%";
+      "Humidity: " + forecastData.daily[i].humidity + "%";
   }
-}
-
-function getWeatherForecast(city) {
-  // get current weather
-  var requestUrl =
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-    city +
-    "&appid=6b8908d00c6960527601cc8bcce1648d";
-
-  fetch(requestUrl)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log(data);
-      currentTemperature.innerText = "Temp: " + data.main.temp + "9\xB0" + "F";
-      currentWind.innerText = "Wind: " + data.wind.speed + " MPH";
-      currentHumidity.innerText = "Humidity: " + data.main.humidity + "%";
-      getUVIndex(data.coord.lat, data.coord.lon);
-    });
 }
 
 body.addEventListener("click", Search);
 
+//this is activated from the search button or history button
 function Search(event) {
   const isButton = event.target.nodeName === "BUTTON";
   if (event.target.innerText === "Search") {
@@ -161,6 +150,7 @@ function Search(event) {
   }
 }
 
+//This function decides weather a search is added to the history. won't let user add same city twice in a row.
 function addToPastSearches() {
   var SearchHistoryButton = document.createElement("button");
   SearchHistoryButton.innerText = city;
